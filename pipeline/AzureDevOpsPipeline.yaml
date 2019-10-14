@@ -1,0 +1,27 @@
+trigger: none
+
+pool:
+  vmimage: 'windows-latest'
+
+steps:
+- script: 'npm install -g markdownlint-cli'
+  displayName: 'NPM Install Packages'
+
+- script: 'markdownlint -c tests/.markdownlint.json .\'
+  displayName: Validate Markdown
+
+- task: PowerShell@2
+  displayName: 'Configure PowerShell Environment'
+  inputs:
+    targetType: filePath
+    filePath: ./helpers/ConfigureEnvironment.ps1
+
+- powershell:
+    Invoke-Pester .\tests\Unit\psAnalyzer.Tests.ps1 -OutputFile TEST-Pester.XML -OutputFormat NUnitXML -EnableExit
+  displayName: 'Run PowerShell Analyzer tests'
+
+- task: PublishTestResults@2
+  displayName: 'Publish Pester Test Results'
+  inputs:
+    testRunner: NUnit
+  condition: succeededOrFailed()
