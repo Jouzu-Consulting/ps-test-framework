@@ -18,6 +18,7 @@ foreach ($unitTest in $unitTests)
     $scriptToTest = $psScripts | Where-Object { $_.FullName -notmatch '\\unit\\' -and $_.Name -match $unitTestName }
     $scriptName   = $scriptToTest.Name
     $scriptName   = $scriptName.TrimEnd('.ps1')
+    $codeCoverageFile = $scriptName + '-codecov.xml'
 
-    Invoke-Pester $unitTestFullPath -CodeCoverage $scriptToTest.FullName -CodeCoverageOutputFile $($scriptName).xml
+    Invoke-Pester $unitTestFullPath -CodeCoverage $scriptToTest.FullName -CodeCoverageOutputFile $codeCoverageFile
 }
