@@ -4,9 +4,10 @@
 #>
 
 $script:moduleRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$script:globalRoot = Split-Path -Parent $script:moduleRoot
 $psAnalyzerSettings = "$script:moduleRoot\Tests\PSScriptAnalyzerSettings.psd1"
-$psScripts = Get-ChildItem $script:moduleRoot -Filter '*.ps1' -Recurse | Where-Object {$_.Name -notmatch 'Tests.ps1'}
-$psModules = Get-ChildItem $script:moduleRoot -Filter '*.psm1' -Recurse
+$psScripts = Get-ChildItem $script:globalRoot -Filter '*.ps1' -Recurse | Where-Object {$_.Name -notmatch 'Tests.ps1'}
+$psModules = Get-ChildItem $script:globalRoot -Filter '*.psm1' -Recurse
 
 Describe "when testing all scripts with PowerShell with PSScriptAnalyzer" {
     foreach ($psScript in $psScripts)
